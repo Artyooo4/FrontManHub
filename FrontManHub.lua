@@ -20,7 +20,7 @@ LoadingText.TextStrokeColor3 = Color3.fromRGB(0, 255, 255)
 
 local TweenService = game:GetService("TweenService")
 
-task.wait(3.5) -- ✅ โชว์ค้างไว้ 3.5 วิ
+task.wait(3.5)
 
 local FadeTween = TweenService:Create(LoadingText, TweenInfo.new(2.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
     TextTransparency = 1,
@@ -32,22 +32,18 @@ FadeTween:Play()
 FadeTween.Completed:Connect(function()
     LoadingGui:Destroy()
 
-    -- ✅ Front Man Hub Full Pack with Search (รวมครบ)
     local ScreenGui = Instance.new("ScreenGui")
     local MainFrame = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
     local UIStroke = Instance.new("UIStroke")
     local Title = Instance.new("TextLabel")
     local Drag = Instance.new("TextButton")
-
     local SearchBox = Instance.new("TextBox")
     local SearchCorner = Instance.new("UICorner")
     local SearchStroke = Instance.new("UIStroke")
-
     local Scrolling = Instance.new("ScrollingFrame")
     local UIListLayout = Instance.new("UIListLayout")
     local UIPadding = Instance.new("UIPadding")
-
     local ToggleButton = Instance.new("TextButton")
     local ToggleCorner = Instance.new("UICorner")
     local ToggleStroke = Instance.new("UIStroke")
@@ -56,7 +52,6 @@ FadeTween.Completed:Connect(function()
     ScreenGui.Parent = game:GetService("CoreGui")
     ScreenGui.ResetOnSpawn = false
 
-    -- Main Frame
     MainFrame.Parent = ScreenGui
     MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     MainFrame.Size = UDim2.new(0, 300, 0, 400)
@@ -87,7 +82,6 @@ FadeTween.Completed:Connect(function()
     Drag.Active = true
     Drag.Draggable = true
 
-    -- Search Box
     SearchBox.Parent = MainFrame
     SearchBox.Size = UDim2.new(0, 260, 0, 30)
     SearchBox.Position = UDim2.new(0, 20, 0, 45)
@@ -106,7 +100,6 @@ FadeTween.Completed:Connect(function()
     SearchStroke.Thickness = 2
     SearchStroke.Transparency = 0.3
 
-    -- Scrolling Frame
     Scrolling.Parent = MainFrame
     Scrolling.Position = UDim2.new(0, 0, 0, 80)
     Scrolling.Size = UDim2.new(1, 0, 1, -80)
@@ -125,7 +118,6 @@ FadeTween.Completed:Connect(function()
         Scrolling.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 10)
     end)
 
-    -- Toggle Button
     ToggleButton.Parent = ScreenGui
     ToggleButton.Size = UDim2.new(0, 40, 0, 40)
     ToggleButton.Position = UDim2.new(0, 20, 0, 100)
@@ -134,6 +126,8 @@ FadeTween.Completed:Connect(function()
     ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     ToggleButton.Font = Enum.Font.GothamBold
     ToggleButton.TextSize = 22
+    ToggleButton.Active = true
+    ToggleButton.Draggable = true
 
     ToggleCorner.CornerRadius = UDim.new(0, 8)
     ToggleCorner.Parent = ToggleButton
@@ -149,7 +143,7 @@ FadeTween.Completed:Connect(function()
         MainFrame.Visible = isOpen
     end)
 
-    -- Button Creator + Search System
+    -- Button System
     local ButtonList = {}
 
     local function CreateButton(text, callback)
@@ -185,7 +179,6 @@ FadeTween.Completed:Connect(function()
         end
     end)
 
-    -- Script Buttons
     CreateButton("Load Infinite Yield", function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
     end)
