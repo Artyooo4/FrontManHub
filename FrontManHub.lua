@@ -64,7 +64,7 @@ FadeTween.Completed:Connect(function()
 
     UIStroke.Parent = MainFrame
     UIStroke.Color = Color3.fromRGB(0, 255, 255)
-    UIStroke.Thickness = 4
+    UIStroke.Thickness = 2
     UIStroke.Transparency = 0.5
 
     Title.Parent = MainFrame
@@ -143,6 +143,7 @@ FadeTween.Completed:Connect(function()
         MainFrame.Visible = isOpen
     end)
 
+    -- Button System
     local ButtonList = {}
 
     local function CreateButton(text, callback)
@@ -178,6 +179,7 @@ FadeTween.Completed:Connect(function()
         end
     end)
 
+    -- Scripts
     CreateButton("Load Infinite Yield", function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
     end)
@@ -196,6 +198,10 @@ FadeTween.Completed:Connect(function()
 
     CreateButton("Invisible (ล่องหน)", function()
         loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
+    end)
+
+    CreateButton("God Mode (Killbrick Toggle)", function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/Artyooo4/FrontManHub/main/GodMode.lua'))()
     end)
 
 end)
