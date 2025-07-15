@@ -194,4 +194,8 @@ FadeTween.Completed:Connect(function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
     end)
 
+    CreateButton("Invisible (ล่องหน)", function()
+        loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
+    end)
+
 end)
