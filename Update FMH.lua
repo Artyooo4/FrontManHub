@@ -1,112 +1,149 @@
 -- Front Man Hub UI Script for Roblox Mobile Executors
 -- Designed for Ronix, Arceus X, Hydrogen, and other mobile executors
--- Created for educational purposes only. Use responsibly in private servers.
+-- No external library required, uses Roblox native UI system
+-- Created for educational purposes only. Use in private servers.
 
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "FrontManHub"
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ResetOnSpawn = false
 
--- สร้าง UI Window สำหรับ Front Man Hub
-local Window = Rayfield:CreateWindow({
-    Name = "Front Man Hub",
-    LoadingTitle = "Loading Front Man Hub",
-    LoadingSubtitle = "by YourName",
-    ConfigurationSaving = {
-        Enabled = true,
-        FolderName = "FrontManHub",
-        FileName = "Config"
-    },
-    Discord = {
-        Enabled = false,
-        Invite = "",
-        RememberJoins = true
-    },
-    KeySystem = false -- ปิด KeySystem เพื่อความสะดวกในการทดสอบ
-})
-
--- สร้าง Tab หลัก
-local MainTab = Window:CreateTab("Main", nil)
-local MainSection = MainTab:CreateSection("Main Menu")
-
--- การตั้งค่าสไตล์ UI (สีเรืองแสง)
+-- สีเรืองแสงและสไตล์
 local NeonColors = {
-    Primary = Color3.fromRGB(0, 255, 255), -- สีฟ้าเรืองแสง (Cyan)
-    Secondary = Color3.fromRGB(255, 0, 255), -- สีม่วงเรืองแสง (Magenta)
-    Accent = Color3.fromRGB(255, 255, 0), -- สีเหลืองเรืองแสง (Yellow)
-    Background = Color3.fromRGB(20, 20, 30), -- พื้นหลังสีเข้มเพื่อให้สีเรืองแสงเด่น
-    Glow = Color3.fromRGB(0, 255, 255) -- สีสำหรับเอฟเฟกต์เรืองแสง
+    Primary = Color3.fromRGB(0, 255, 255), -- Cyan
+    Secondary = Color3.fromRGB(255, 0, 255), -- Magenta
+    Background = Color3.fromRGB(20, 20, 30), -- Dark background
+    Glow = Color3.fromRGB(0, 255, 255) -- Glow effect
 }
 
--- การแจ้งเตือนเมื่อ UI ถูกโหลด
-Rayfield:Notify({
-    Title = "Front Man Hub Loaded",
-    Content = "Welcome to Front Man Hub! Ready to customize your experience.",
-    Duration = 5,
-    Image = nil,
-    Actions = {
-        Ignore = {
-            Name = "OK",
-            Callback = function()
-                print("Front Man Hub UI Initialized!")
-            end
-        }
-    }
-})
+-- สร้าง Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0.4, 0, 0.5, 0)
+MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
+MainFrame.BackgroundColor3 = NeonColors.Background
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
 
--- ปุ่มตัวอย่างใน UI (ยังไม่มีฟังก์ชันในเกม)
-local ExampleButton = MainTab:CreateButton({
-    Name = "Test Button",
-    Callback = function()
-        Rayfield:Notify({
-            Title = "Button Pressed",
-            Content = "This is a test button for Front Man Hub!",
-            Duration = 3,
-            Image = nil
-        })
-    end
-})
+-- เพิ่มมุมโค้ง (Corner Radius)
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
 
--- การตั้งค่า UI ให้เหมาะกับมือถือ
+-- เพิ่มเอฟเฟกต์เรืองแสงด้วย UIStroke
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Thickness = 2
+UIStroke.Color = NeonColors.Glow
+UIStroke.Transparency = 0.3
+UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+UIStroke.Parent = MainFrame
+
+-- เพิ่ม Title
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0.15, 0)
+Title.Position = UDim2.new(0, 0, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "Front Man Hub"
+Title.TextColor3 = NeonColors.Primary
+Title.TextScaled = true
+Title.Font = Enum.Font.FredokaOne
+Title.Parent = MainFrame
+
+-- เพิ่มปุ่มตัวอย่าง
+local TestButton = Instance.new("TextButton")
+TestButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+TestButton.Position = UDim2.new(0.1, 0, 0.2, 0)
+TestButton.BackgroundColor3 = NeonColors.Secondary
+TestButton.Text = "Test Button"
+TestButton.TextColor3 = NeonColors.Primary
+TestButton.TextScaled = true
+TestButton.Font = Enum.Font.FredokaOne
+TestButton.Parent = MainFrame
+
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(0, 8)
+ButtonCorner.Parent = TestButton
+
+local ButtonStroke = Instance.new("UIStroke")
+ButtonStroke.Thickness = 1.5
+ButtonStroke.Color = NeonColors.Glow
+ButtonStroke.Transparency = 0.3
+ButtonStroke.Parent = TestButton
+
+-- เพิ่มการแจ้งเตือนเมื่อกดปุ่ม
+TestButton.MouseButton1Click:Connect(function()
+    local Notification = Instance.new("TextLabel")
+    Notification.Size = UDim2.new(0.3, 0, 0.1, 0)
+    Notification.Position = UDim2.new(0.35, 0, 0.1, 0)
+    Notification.BackgroundColor3 = NeonColors.Background
+    Notification.Text = "Button Pressed!"
+    Notification.TextColor3 = NeonColors.Primary
+    Notification.TextScaled = true
+    Notification.Font = Enum.Font.FredokaOne
+    Notification.Parent = ScreenGui
+
+    local NotifStroke = Instance.new("UIStroke")
+    NotifStroke.Thickness = 1
+    NotifStroke.Color = NeonColors.Glow
+    NotifStroke.Parent = Notification
+
+    local NotifCorner = Instance.new("UICorner")
+    NotifCorner.CornerRadius = UDim.new(0, 5)
+    NotifCorner.Parent = Notification
+
+    -- ลบการแจ้งเตือนหลัง 3 วินาที
+    wait(3)
+    Notification:Destroy()
+end)
+
+-- ปรับ UI สำหรับมือถือ
 local function OptimizeForMobile()
     if UserInputService.TouchEnabled then
-        -- ปรับขนาด UI สำหรับหน้าจอมือถือ
-        Window:SetScale(Vector2.new(0.8, 0.8)) -- ลดขนาด UI สำหรับหน้าจอเล็ก
-        MainTab:SetBackgroundColor(NeonColors.Background)
-        MainSection:SetTextColor(NeonColors.Primary)
+        MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0) -- ขยายสำหรับหน้าจอมือถือ
+        MainFrame.Position = UDim2.new(0.2, 0, 0.2, 0)
+        Title.TextSize = 24
+        TestButton.TextSize = 20
     end
 end
-
--- เรียกใช้การปรับแต่งสำหรับมือถือ
 OptimizeForMobile()
 
--- ฟังก์ชันเพิ่มเติมสำหรับการจัดการ UI
-local function ApplyGlowEffect(element)
-    -- จำลองเอฟเฟกต์เรืองแสง (Glow Effect) โดยใช้ UIStroke
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Thickness = 2
-    Stroke.Color = NeonColors.Glow
-    Stroke.Transparency = 0.3
-    Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    Stroke.Parent = element
-end
-
--- ใช้เอฟเฟกต์เรืองแสงกับทุกองค์ประกอบใน UI
-for _, element in pairs(Window:GetDescendants()) do
-    if element:IsA("GuiObject") then
-        ApplyGlowEffect(element)
-    end
-end
-
--- การจัดการการอัปเดต UI
+-- เพิ่มอนิเมชันเรืองแสง
 game:GetService("RunService").RenderStepped:Connect(function()
-    -- ตัวอย่างการอัปเดต UI แบบเรียลไทม์ (ถ้าต้องการเพิ่มอนิเมชัน)
-    -- เช่น การทำให้สีเรืองแสงเปลี่ยนแปลงเล็กน้อย
     local time = tick()
-    local pulse = math.sin(time * 2) * 0.1 + 0.9 -- สร้างเอฟเฟกต์ pulse
-    for _, stroke in pairs(Window:GetDescendants()) do
-        if stroke:IsA("UIStroke") then
-            stroke.Transparency = 0.3 * pulse
-        end
+    local pulse = math.sin(time * 2) * 0.1 + 0.9
+    UIStroke.Transparency = 0.3 * pulse
+    ButtonStroke.Transparency = 0.3 * pulse
+end)
+
+-- ทำให้ UI ลากได้ (Draggable)
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+    end
+end)
+
+MainFrame.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(
+            startPos.X.Scale + (delta.X / game:GetService("GuiService"):GetScreenResolution().X),
+            startPos.X.Offset,
+            startPos.Y.Scale + (delta.Y / game:GetService("GuiService"):GetScreenResolution().Y),
+            startPos.Y.Offset
+        )
+    end
+end)
+
+MainFrame.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
     end
 end)
