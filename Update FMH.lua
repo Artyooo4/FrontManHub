@@ -1,6 +1,6 @@
 -- Front Man Hub UI Script for Roblox Mobile Executors
 -- Designed for Ronix, Arceus X, Hydrogen, and other mobile executors
--- Toggle button is a square with glowing red X, draggable, and optimized fonts
+-- Toggle button is enforced as a square with glowing red X, draggable, and optimized fonts
 -- Created for educational purposes only. Use in private servers.
 
 local Players = game:GetService("Players")
@@ -110,9 +110,9 @@ TestButton.MouseButton1Click:Connect(function()
     Notification:Destroy()
 end)
 
--- สร้างปุ่มเปิด/ปิด UI (สี่เหลี่ยมจัตุรัส, ลากได้)
+-- สร้างปุ่มเปิด/ปิด UI (บังคับเป็นสี่เหลี่ยมจัตุรัส, ลากได้)
 local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0) -- สี่เหลี่ยมจัตุรัส (กว้าง=สูง)
+ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0) -- เริ่มต้นเป็นสี่เหลี่ยมจัตุรัส
 ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
 ToggleButton.BackgroundColor3 = NeonColors.Background
 ToggleButton.Text = "X"
@@ -132,6 +132,17 @@ ToggleStroke.Thickness = 2
 ToggleStroke.Color = NeonColors.ToggleGlow
 ToggleStroke.Transparency = 0.3
 ToggleStroke.Parent = ToggleButton
+
+-- ฟังก์ชันบังคับให้ ToggleButton เป็นสี่เหลี่ยมจัตุรัส
+local function EnforceSquareSize()
+    local currentSize = ToggleButton.Size
+    ToggleButton.Size = UDim2.new(currentSize.X.Scale, 0, currentSize.X.Scale, 0) -- กว้าง=สูง เท่ากัน
+end
+
+-- อัปเดตขนาดทุกเฟรมเพื่อบังคับสี่เหลี่ยมจัตุรัส
+RunService.RenderStepped:Connect(function()
+    EnforceSquareSize()
+end)
 
 -- ฟังก์ชันควบคุมการเปิด/ปิด UI
 local isUIVisible = true
@@ -175,7 +186,7 @@ ToggleButton.InputEnded:Connect(function(input)
     end
 end)
 
--- ปรับ UI สำหรับมือถือ (รักษาสี่เหลี่ยมจัตุรัส)
+-- ปรับ UI สำหรับมือถือ (บังคับสี่เหลี่ยมจัตุรัส)
 local function OptimizeForMobile()
     if UserInputService.TouchEnabled then
         MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
