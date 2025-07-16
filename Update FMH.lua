@@ -1,13 +1,13 @@
 -- Front Man Hub UI Script for Roblox Mobile Executors
 -- Designed for Ronix, Arceus X, Hydrogen, and other mobile executors
--- Toggle button is enforced as a square with glowing red X, draggable, using UIAspectRatioConstraint
+-- Includes toggle button (square with glowing red X, draggable) and fly function
 -- Created for educational purposes only. Use in private servers.
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
+local LocalPlayer = Players.LocalPlayer
 
 -- สร้าง ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
@@ -110,9 +110,9 @@ TestButton.MouseButton1Click:Connect(function()
     Notification:Destroy()
 end)
 
--- สร้างปุ่มเปิด/ปิด UI (บังคับเป็นสี่เหลี่ยมจัตุรัสด้วย UIAspectRatioConstraint)
+-- สร้างปุ่มเปิด/ปิด UI (บังคับเป็นสี่เหลี่ยมจัตุรัส)
 local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0) -- เริ่มต้นเป็นสี่เหลี่ยมจัตุรัส
+ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
 ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
 ToggleButton.BackgroundColor3 = NeonColors.Background
 ToggleButton.Text = "X"
@@ -123,9 +123,8 @@ ToggleButton.TextSize = 20
 ToggleButton.Parent = ScreenGui
 print("ToggleButton Created") -- Debug
 
--- เพิ่ม UIAspectRatioConstraint เพื่อบังคับสี่เหลี่ยมจัตุรัส
 local AspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-AspectRatioConstraint.AspectRatio = 1 -- อัตราส่วน 1:1 (สี่เหลี่ยมจัตุรัส)
+AspectRatioConstraint.AspectRatio = 1 -- บังคับสี่เหลี่ยมจัตุรัส
 AspectRatioConstraint.Parent = ToggleButton
 
 local ToggleCorner = Instance.new("UICorner")
@@ -180,15 +179,105 @@ ToggleButton.InputEnded:Connect(function(input)
     end
 end)
 
--- ปรับ UI สำหรับมือถือ (บังคับสี่เหลี่ยมจัตุรัส)
+-- สร้างปุ่มบินภายใน MainFrame
+local FlyButton = Instance.new("TextButton")
+FlyButton.Size = UDim2.new(0.8, 0, 0.15, 0) -- สี่เหลี่ยมใน UI หลัก
+FlyButton.Position = UDim2.new(0.1, 0, 0.4, 0) -- อยู่ใต้ปุ่ม Test Button
+FlyButton.BackgroundColor3 = NeonColors.Secondary
+FlyButton.Text = "Fly"
+FlyButton.TextColor3 = NeonColors.Primary
+FlyButton.TextScaled = true
+FlyButton.Font = Enum.Font.SourceSansBold
+FlyButton.TextSize = 22
+FlyButton.Parent = MainFrame
+
+local FlyButtonCorner = Instance.new("UICorner")
+FlyButtonCorner.CornerRadius = UDim.new(0, 8)
+FlyButtonCorner.Parent = FlyButton
+
+local FlyButtonStroke = Instance.new("UIStroke")
+FlyButtonStroke.Thickness = 1.5
+FlyButtonStroke.Color = NeonColors.Glow
+FlyButtonStroke.Transparency = 0.3
+FlyButtonStroke.Parent = FlyButton
+
+-- ฟังก์ชันบิน
+local BodyVelocity = nil
+local isFlying = false
+
+FlyButton.MouseButton1Click:Connect(function()
+    print("Fly Button Clicked, Fly Status: " .. tostring(isFlying)) -- Debug
+    if not isFlying then
+        local character = LocalPlayer.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            BodyVelocity = Instance.new("BodyVelocity")
+            BodyVelocity.Velocity = Vector3.new(0, 0, 0)
+            BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            BodyVelocity.Parent = character.HumanoidRootPart
+
+            isFlying = true
+            FlyButton.Text = "Stop Fly"
+
+            -- ควบคุมการบินด้วยปุ่มบนมือถือ
+            local function onInput(input)
+                local moveDirection = Vector3.new(0, 0, 0)
+                if input.KeyCode == Enum.KeyCode.W or input.KeyCode == Enum.KeyCode.Up then
+                    moveDirection = moveDirection + Vector3.new(0, 0, -1)
+                elseif input.KeyCode == Enum.KeyCode.S or input.KeyCode == Enum.KeyCode.Down then
+                    moveDirection = moveDirection + Vector3.new(0, 0, 1)
+                elseif input.KeyCode == Enum.KeyCode.A then
+                    moveDirection = moveDirection + Vector3.new(-1, 0, 0)
+                elseif input.KeyCode == Enum.KeyCode.D then
+                    moveDirection = moveDirection + Vector3.new(1, 0, 0)
+                elseif input.KeyCode == Enum.KeyCode.Space then
+                    moveDirection = moveDirection + Vector3.new(0, 1, 0)
+                elseif input.KeyCode == Enum.KeyCode.LeftShift then
+                    moveDirection = moveDirection + Vector3.new(0, -1, 0)
+                end
+
+                if BodyVelocity and isFlying then
+                    BodyVelocity.Velocity = moveDirection * 50 -- ความเร็วบิน
+                end
+            end
+
+            UserInputService.InputBegan:Connect(onInput)
+
+            RunService.RenderStepped:Connect(function()
+                if BodyVelocity and isFlying and character and character:FindFirstChild("HumanoidRootPart") then
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid and humanoid.Health > 0 then
+                        local camera = workspace.CurrentCamera
+                        local direction = camera.CFrame.LookVector
+                        local rightVector = camera.CFrame.RightVector
+                        BodyVelocity.Velocity = Vector3.new(
+                            (UserInputService:IsKeyDown(Enum.KeyCode.D) and 50 or 0) - (UserInputService:IsKeyDown(Enum.KeyCode.A) and 50 or 0),
+                            (UserInputService:IsKeyDown(Enum.KeyCode.Space) and 50 or 0) - (UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and 50 or 0),
+                            (UserInputService:IsKeyDown(Enum.KeyCode.W) and -50 or 0) - (UserInputService:IsKeyDown(Enum.KeyCode.S) and 50 or 0)
+                        )
+                    end
+                end
+            end)
+        end
+    else
+        if BodyVelocity then
+            BodyVelocity:Destroy()
+            BodyVelocity = nil
+        end
+        isFlying = false
+        FlyButton.Text = "Fly"
+    end
+end)
+
+-- ปรับ UI สำหรับมือถือ
 local function OptimizeForMobile()
     if UserInputService.TouchEnabled then
         MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
         MainFrame.Position = UDim2.new(0.2, 0, 0.2, 0)
-        ToggleButton.Size = UDim2.new(0.12, 0, 0.12, 0) -- สี่เหลี่ยมจัตุรัส
+        ToggleButton.Size = UDim2.new(0.12, 0, 0.12, 0)
         ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
         Title.TextSize = 26
         TestButton.TextSize = 20
+        FlyButton.TextSize = 20
         ToggleButton.TextSize = 22
     end
     print("Optimized for Mobile") -- Debug
@@ -202,6 +291,7 @@ RunService.RenderStepped:Connect(function()
     UIStroke.Transparency = 0.3 * pulse
     ButtonStroke.Transparency = 0.3 * pulse
     ToggleStroke.Transparency = 0.3 * pulse
+    FlyButtonStroke.Transparency = 0.3 * pulse
 end)
 
 -- ทำให้ MainFrame ลากได้
@@ -234,5 +324,38 @@ MainFrame.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = false
         print("MainFrame Dragging Ended") -- Debug
+    end
+end)
+
+-- ทำให้ ToggleButton ลากได้
+local toggleDragging = false
+local toggleDragStart = nil
+local toggleStartPos = nil
+
+ToggleButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        toggleDragging = true
+        toggleDragStart = input.Position
+        toggleStartPos = ToggleButton.Position
+        print("Toggle Dragging Started") -- Debug
+    end
+end)
+
+ToggleButton.InputChanged:Connect(function(input)
+    if toggleDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - toggleDragStart
+        ToggleButton.Position = UDim2.new(
+            toggleStartPos.X.Scale + (delta.X / GuiService:GetScreenResolution().X),
+            toggleStartPos.X.Offset,
+            toggleStartPos.Y.Scale + (delta.Y / GuiService:GetScreenResolution().Y),
+            toggleStartPos.Y.Offset
+        )
+    end
+end)
+
+ToggleButton.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        toggleDragging = false
+        print("Toggle Dragging Ended") -- Debug
     end
 end)
