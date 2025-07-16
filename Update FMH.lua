@@ -112,7 +112,7 @@ end)
 
 -- สร้างปุ่มเปิด/ปิด UI (สี่เหลี่ยมจัตุรัส, ลากได้)
 local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0) -- สี่เหลี่ยมจัตุรัส
+ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0) -- สี่เหลี่ยมจัตุรัส (กว้าง=สูง)
 ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
 ToggleButton.BackgroundColor3 = NeonColors.Background
 ToggleButton.Text = "X"
@@ -175,12 +175,12 @@ ToggleButton.InputEnded:Connect(function(input)
     end
 end)
 
--- ปรับ UI สำหรับมือถือ
+-- ปรับ UI สำหรับมือถือ (รักษาสี่เหลี่ยมจัตุรัส)
 local function OptimizeForMobile()
     if UserInputService.TouchEnabled then
         MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
         MainFrame.Position = UDim2.new(0.2, 0, 0.2, 0)
-        ToggleButton.Size = UDim2.new(0.12, 0, 0.12, 0) -- สี่เหลี่ยมจัตุรัส
+        ToggleButton.Size = UDim2.new(0.12, 0, 0.12, 0) -- สี่เหลี่ยมจัตุรัส (กว้าง=สูง)
         ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
         Title.TextSize = 26
         TestButton.TextSize = 20
