@@ -1,6 +1,6 @@
 -- Front Man Hub UI Script for Roblox Mobile Executors
 -- Designed for Ronix, Arceus X, Hydrogen, and other mobile executors
--- Toggle button is enforced as a square with glowing red X, draggable, and optimized fonts
+-- Toggle button is enforced as a square with glowing red X, draggable, using UIAspectRatioConstraint
 -- Created for educational purposes only. Use in private servers.
 
 local Players = game:GetService("Players")
@@ -110,7 +110,7 @@ TestButton.MouseButton1Click:Connect(function()
     Notification:Destroy()
 end)
 
--- สร้างปุ่มเปิด/ปิด UI (บังคับเป็นสี่เหลี่ยมจัตุรัส, ลากได้)
+-- สร้างปุ่มเปิด/ปิด UI (บังคับเป็นสี่เหลี่ยมจัตุรัสด้วย UIAspectRatioConstraint)
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0) -- เริ่มต้นเป็นสี่เหลี่ยมจัตุรัส
 ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
@@ -123,6 +123,11 @@ ToggleButton.TextSize = 20
 ToggleButton.Parent = ScreenGui
 print("ToggleButton Created") -- Debug
 
+-- เพิ่ม UIAspectRatioConstraint เพื่อบังคับสี่เหลี่ยมจัตุรัส
+local AspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+AspectRatioConstraint.AspectRatio = 1 -- อัตราส่วน 1:1 (สี่เหลี่ยมจัตุรัส)
+AspectRatioConstraint.Parent = ToggleButton
+
 local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(0, 5)
 ToggleCorner.Parent = ToggleButton
@@ -132,17 +137,6 @@ ToggleStroke.Thickness = 2
 ToggleStroke.Color = NeonColors.ToggleGlow
 ToggleStroke.Transparency = 0.3
 ToggleStroke.Parent = ToggleButton
-
--- ฟังก์ชันบังคับให้ ToggleButton เป็นสี่เหลี่ยมจัตุรัส
-local function EnforceSquareSize()
-    local currentSize = ToggleButton.Size
-    ToggleButton.Size = UDim2.new(currentSize.X.Scale, 0, currentSize.X.Scale, 0) -- กว้าง=สูง เท่ากัน
-end
-
--- อัปเดตขนาดทุกเฟรมเพื่อบังคับสี่เหลี่ยมจัตุรัส
-RunService.RenderStepped:Connect(function()
-    EnforceSquareSize()
-end)
 
 -- ฟังก์ชันควบคุมการเปิด/ปิด UI
 local isUIVisible = true
@@ -191,7 +185,7 @@ local function OptimizeForMobile()
     if UserInputService.TouchEnabled then
         MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
         MainFrame.Position = UDim2.new(0.2, 0, 0.2, 0)
-        ToggleButton.Size = UDim2.new(0.12, 0, 0.12, 0) -- สี่เหลี่ยมจัตุรัส (กว้าง=สูง)
+        ToggleButton.Size = UDim2.new(0.12, 0, 0.12, 0) -- สี่เหลี่ยมจัตุรัส
         ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
         Title.TextSize = 26
         TestButton.TextSize = 20
