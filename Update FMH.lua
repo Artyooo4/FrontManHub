@@ -1,22 +1,28 @@
 -- Front Man Hub UI Script for Roblox Mobile Executors
 -- Designed for Ronix, Arceus X, Hydrogen, and other mobile executors
--- No external library required, uses Roblox native UI system
+-- Includes toggle button with glowing red X and optimized fonts
 -- Created for educational purposes only. Use in private servers.
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local GuiService = game:GetService("GuiService")
+
+-- สร้าง ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "FrontManHub"
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
 
 -- สีเรืองแสงและสไตล์
 local NeonColors = {
     Primary = Color3.fromRGB(0, 255, 255), -- Cyan
     Secondary = Color3.fromRGB(255, 0, 255), -- Magenta
     Background = Color3.fromRGB(20, 20, 30), -- Dark background
-    Glow = Color3.fromRGB(0, 255, 255) -- Glow effect
+    Glow = Color3.fromRGB(0, 255, 255), -- Glow effect
+    ToggleGlow = Color3.fromRGB(255, 0, 0) -- Red glow for toggle button
 }
 
 -- สร้าง Main Frame
@@ -25,14 +31,15 @@ MainFrame.Size = UDim2.new(0.4, 0, 0.5, 0)
 MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
 MainFrame.BackgroundColor3 = NeonColors.Background
 MainFrame.BorderSizePixel = 0
+MainFrame.Visible = true -- เริ่มต้นให้ UI แสดง
 MainFrame.Parent = ScreenGui
 
--- เพิ่มมุมโค้ง (Corner Radius)
+-- เพิ่มมุมโค้ง
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = MainFrame
 
--- เพิ่มเอฟเฟกต์เรืองแสงด้วย UIStroke
+-- เพิ่มเอฟเฟกต์เรืองแสง
 local UIStroke = Instance.new("UIStroke")
 UIStroke.Thickness = 2
 UIStroke.Color = NeonColors.Glow
@@ -40,7 +47,7 @@ UIStroke.Transparency = 0.3
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Parent = MainFrame
 
--- เพิ่ม Title
+-- เพิ่ม Title (ใช้ font ที่อ่านง่าย)
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.15, 0)
 Title.Position = UDim2.new(0, 0, 0, 0)
@@ -48,7 +55,8 @@ Title.BackgroundTransparency = 1
 Title.Text = "Front Man Hub"
 Title.TextColor3 = NeonColors.Primary
 Title.TextScaled = true
-Title.Font = Enum.Font.FredokaOne
+Title.Font = Enum.Font.SourceSansBold -- Font ที่อ่านง่าย
+Title.TextSize = 28 -- ขนาดตัวอักษรที่เหมาะกับมือถือ
 Title.Parent = MainFrame
 
 -- เพิ่มปุ่มตัวอย่าง
@@ -59,7 +67,8 @@ TestButton.BackgroundColor3 = NeonColors.Secondary
 TestButton.Text = "Test Button"
 TestButton.TextColor3 = NeonColors.Primary
 TestButton.TextScaled = true
-TestButton.Font = Enum.Font.FredokaOne
+TestButton.Font = Enum.Font.SourceSansBold -- Font ที่อ่านง่าย
+TestButton.TextSize = 22
 TestButton.Parent = MainFrame
 
 local ButtonCorner = Instance.new("UICorner")
@@ -72,16 +81,17 @@ ButtonStroke.Color = NeonColors.Glow
 ButtonStroke.Transparency = 0.3
 ButtonStroke.Parent = TestButton
 
--- เพิ่มการแจ้งเตือนเมื่อกดปุ่ม
+-- การแจ้งเตือนเมื่อกดปุ่ม
 TestButton.MouseButton1Click:Connect(function()
     local Notification = Instance.new("TextLabel")
     Notification.Size = UDim2.new(0.3, 0, 0.1, 0)
     Notification.Position = UDim2.new(0.35, 0, 0.1, 0)
     Notification.BackgroundColor3 = NeonColors.Background
-    Notification.Text = "Button Pressed!"
+    Notification.Text = "ควายไง่!"
     Notification.TextColor3 = NeonColors.Primary
     Notification.TextScaled = true
-    Notification.Font = Enum.Font.FredokaOne
+    Notification.Font = Enum.Font.SourceSansBold
+    Notification.TextSize = 20
     Notification.Parent = ScreenGui
 
     local NotifStroke = Instance.new("UIStroke")
@@ -93,31 +103,62 @@ TestButton.MouseButton1Click:Connect(function()
     NotifCorner.CornerRadius = UDim.new(0, 5)
     NotifCorner.Parent = Notification
 
-    -- ลบการแจ้งเตือนหลัง 3 วินาที
     wait(3)
     Notification:Destroy()
+end)
+
+-- สร้างปุ่มเปิด/ปิด UI (Toggle Button)
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0.08, 0, 0.08, 0)
+ToggleButton.Position = UDim2.new(0.02, 0, 0.02, 0)
+ToggleButton.BackgroundColor3 = NeonColors.Background
+ToggleButton.Text = "X"
+ToggleButton.TextColor3 = NeonColors.ToggleGlow
+ToggleButton.TextScaled = true
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.TextSize = 18
+ToggleButton.Parent = ScreenGui
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 5)
+ToggleCorner.Parent = ToggleButton
+
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Thickness = 1.5
+ToggleStroke.Color = NeonColors.ToggleGlow
+ToggleStroke.Transparency = 0.3
+ToggleStroke.Parent = ToggleButton
+
+-- ฟังก์ชันควบคุมการเปิด/ปิด UI
+local isUIVisible = true
+ToggleButton.MouseButton1Click:Connect(function()
+    isUIVisible = not isUIVisible
+    MainFrame.Visible = isUIVisible
+    ToggleButton.Text = isUIVisible and "X" or "O" -- เปลี่ยนสัญลักษณ์เมื่อปิด/เปิด
 end)
 
 -- ปรับ UI สำหรับมือถือ
 local function OptimizeForMobile()
     if UserInputService.TouchEnabled then
-        MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0) -- ขยายสำหรับหน้าจอมือถือ
+        MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
         MainFrame.Position = UDim2.new(0.2, 0, 0.2, 0)
-        Title.TextSize = 24
+        ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+        Title.TextSize = 26
         TestButton.TextSize = 20
     end
 end
 OptimizeForMobile()
 
--- เพิ่มอนิเมชันเรืองแสง
-game:GetService("RunService").RenderStepped:Connect(function()
+-- อนิเมชันเรืองแสง
+RunService.RenderStepped:Connect(function()
     local time = tick()
     local pulse = math.sin(time * 2) * 0.1 + 0.9
     UIStroke.Transparency = 0.3 * pulse
     ButtonStroke.Transparency = 0.3 * pulse
+    ToggleStroke.Transparency = 0.3 * pulse
 end)
 
--- ทำให้ UI ลากได้ (Draggable)
+-- ทำให้ MainFrame ลากได้
 local dragging = false
 local dragStart = nil
 local startPos = nil
@@ -134,9 +175,9 @@ MainFrame.InputChanged:Connect(function(input)
     if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
         local delta = input.Position - dragStart
         MainFrame.Position = UDim2.new(
-            startPos.X.Scale + (delta.X / game:GetService("GuiService"):GetScreenResolution().X),
+            startPos.X.Scale + (delta.X / GuiService:GetScreenResolution().X),
             startPos.X.Offset,
-            startPos.Y.Scale + (delta.Y / game:GetService("GuiService"):GetScreenResolution().Y),
+            startPos.Y.Scale + (delta.Y / GuiService:GetScreenResolution().Y),
             startPos.Y.Offset
         )
     end
