@@ -63,9 +63,14 @@ FadeTween.Completed:Connect(function()
     UICorner.Parent = MainFrame
 
     UIStroke.Parent = MainFrame
-    UIStroke.Color = Color3.fromRGB(0, 255, 255)
-    UIStroke.Thickness = 4
-    UIStroke.Transparency = 0.5
+    UIStroke.Thickness = 6
+    UIStroke.Transparency = 0.3
+
+    local hue = 0
+    game:GetService("RunService").RenderStepped:Connect(function()
+        hue = (hue + 0.002) % 1
+        UIStroke.Color = Color3.fromHSV(hue, 1, 1)
+    end)
 
     Title.Parent = MainFrame
     Title.BackgroundTransparency = 1
@@ -178,6 +183,7 @@ FadeTween.Completed:Connect(function()
         end
     end)
 
+    -- ✅ Script Buttons
     CreateButton("Load Infinite Yield", function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
     end)
@@ -196,78 +202,6 @@ FadeTween.Completed:Connect(function()
 
     CreateButton("Invisible (ล่องหน)", function()
         loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
-    end)
-
-    CreateButton("God Mode (กัน Killbrick)", function()
-        loadstring([[
-            -- สคริปต์ God Mode ตามที่มึงให้มา
-            local ScreenGui = Instance.new("ScreenGui")
-            local Frame = Instance.new("Frame")
-            local TextLabel = Instance.new("TextLabel")
-            local TextButton = Instance.new("TextButton")
-
-            ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-            ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-            ScreenGui.ResetOnSpawn = false
-
-            Frame.Parent = ScreenGui
-            Frame.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
-            Frame.Size = UDim2.new(0, 163, 0, 82)
-            Frame.Active = true
-            Frame.Draggable = true
-
-            TextLabel.Parent = Frame
-            TextLabel.Size = UDim2.new(0, 163, 0, 23)
-            TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-            TextLabel.Text = "Killbrick toggle"
-            TextLabel.Font = Enum.Font.SourceSansBold
-            TextLabel.TextSize = 18
-            TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-            TextButton.Parent = Frame
-            TextButton.Position = UDim2.new(0.175, 0, 0.409, 0)
-            TextButton.Size = UDim2.new(0, 104, 0, 31)
-            TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            TextButton.Text = "OFF"
-            TextButton.Font = Enum.Font.SourceSansItalic
-            TextButton.TextSize = 15
-            TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-
-            local player = game:GetService("Players").LocalPlayer
-            local nega = true
-
-            local function updateButtonText()
-                if nega then
-                    TextButton.Text = "OFF"
-                else
-                    TextButton.Text = "ON"
-                end
-            end
-
-            TextButton.MouseButton1Click:Connect(function()
-                nega = not nega
-                updateButtonText()
-            end)
-
-            local function applyToggleEffect()
-                while task.wait() do
-                    local character = player.Character or player.CharacterAdded:Wait()
-                    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-                    local parts = workspace:GetPartBoundsInRadius(humanoidRootPart.Position, 10)
-                    for _, part in ipairs(parts) do
-                        part.CanTouch = nega
-                    end
-                end
-            end
-
-            player.CharacterAdded:Connect(function()
-                applyToggleEffect()
-                updateButtonText()
-            end)
-
-            applyToggleEffect()
-            updateButtonText()
-        ]])()
     end)
 
 end)
