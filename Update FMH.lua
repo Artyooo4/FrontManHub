@@ -15,6 +15,7 @@ ScreenGui.Name = "FrontManHub"
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = true
+print("ScreenGui Loaded") -- Debug
 
 -- สีเรืองแสงและสไตล์
 local NeonColors = {
@@ -31,8 +32,9 @@ MainFrame.Size = UDim2.new(0.4, 0, 0.5, 0)
 MainFrame.Position = UDim2.new(0.3, 0, 0.25, 0)
 MainFrame.BackgroundColor3 = NeonColors.Background
 MainFrame.BorderSizePixel = 0
-MainFrame.Visible = true -- เริ่มต้นให้ UI แสดง
+MainFrame.Visible = true
 MainFrame.Parent = ScreenGui
+print("MainFrame Created") -- Debug
 
 -- เพิ่มมุมโค้ง
 local UICorner = Instance.new("UICorner")
@@ -47,7 +49,7 @@ UIStroke.Transparency = 0.3
 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 UIStroke.Parent = MainFrame
 
--- เพิ่ม Title (ใช้ font ที่อ่านง่าย)
+-- เพิ่ม Title
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0.15, 0)
 Title.Position = UDim2.new(0, 0, 0, 0)
@@ -55,8 +57,8 @@ Title.BackgroundTransparency = 1
 Title.Text = "Front Man Hub"
 Title.TextColor3 = NeonColors.Primary
 Title.TextScaled = true
-Title.Font = Enum.Font.SourceSansBold -- Font ที่อ่านง่าย
-Title.TextSize = 28 -- ขนาดตัวอักษรที่เหมาะกับมือถือ
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 28
 Title.Parent = MainFrame
 
 -- เพิ่มปุ่มตัวอย่าง
@@ -67,7 +69,7 @@ TestButton.BackgroundColor3 = NeonColors.Secondary
 TestButton.Text = "Test Button"
 TestButton.TextColor3 = NeonColors.Primary
 TestButton.TextScaled = true
-TestButton.Font = Enum.Font.SourceSansBold -- Font ที่อ่านง่าย
+TestButton.Font = Enum.Font.SourceSansBold
 TestButton.TextSize = 22
 TestButton.Parent = MainFrame
 
@@ -83,11 +85,12 @@ ButtonStroke.Parent = TestButton
 
 -- การแจ้งเตือนเมื่อกดปุ่ม
 TestButton.MouseButton1Click:Connect(function()
+    print("Test Button Clicked") -- Debug
     local Notification = Instance.new("TextLabel")
     Notification.Size = UDim2.new(0.3, 0, 0.1, 0)
     Notification.Position = UDim2.new(0.35, 0, 0.1, 0)
     Notification.BackgroundColor3 = NeonColors.Background
-    Notification.Text = "ควายไง่!"
+    Notification.Text = "Button Pressed!"
     Notification.TextColor3 = NeonColors.Primary
     Notification.TextScaled = true
     Notification.Font = Enum.Font.SourceSansBold
@@ -107,24 +110,25 @@ TestButton.MouseButton1Click:Connect(function()
     Notification:Destroy()
 end)
 
--- สร้างปุ่มเปิด/ปิด UI (Toggle Button)
+-- สร้างปุ่มเปิด/ปิด UI (ปรับขนาดและตำแหน่งให้ชัดเจน)
 local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0.08, 0, 0.08, 0)
-ToggleButton.Position = UDim2.new(0.02, 0, 0.02, 0)
+ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0) -- ขนาดใหญ่ขึ้นเล็กน้อย
+ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0) -- ขยับให้มองเห็นชัด
 ToggleButton.BackgroundColor3 = NeonColors.Background
 ToggleButton.Text = "X"
 ToggleButton.TextColor3 = NeonColors.ToggleGlow
 ToggleButton.TextScaled = true
 ToggleButton.Font = Enum.Font.SourceSansBold
-ToggleButton.TextSize = 18
+ToggleButton.TextSize = 20
 ToggleButton.Parent = ScreenGui
+print("ToggleButton Created") -- Debug
 
 local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(0, 5)
 ToggleCorner.Parent = ToggleButton
 
 local ToggleStroke = Instance.new("UIStroke")
-ToggleStroke.Thickness = 1.5
+ToggleStroke.Thickness = 2
 ToggleStroke.Color = NeonColors.ToggleGlow
 ToggleStroke.Transparency = 0.3
 ToggleStroke.Parent = ToggleButton
@@ -132,9 +136,10 @@ ToggleStroke.Parent = ToggleButton
 -- ฟังก์ชันควบคุมการเปิด/ปิด UI
 local isUIVisible = true
 ToggleButton.MouseButton1Click:Connect(function()
+    print("Toggle Button Clicked, UI Visible: " .. tostring(isUIVisible)) -- Debug
     isUIVisible = not isUIVisible
     MainFrame.Visible = isUIVisible
-    ToggleButton.Text = isUIVisible and "X" or "O" -- เปลี่ยนสัญลักษณ์เมื่อปิด/เปิด
+    ToggleButton.Text = isUIVisible and "X" or "O"
 end)
 
 -- ปรับ UI สำหรับมือถือ
@@ -142,10 +147,13 @@ local function OptimizeForMobile()
     if UserInputService.TouchEnabled then
         MainFrame.Size = UDim2.new(0.6, 0, 0.6, 0)
         MainFrame.Position = UDim2.new(0.2, 0, 0.2, 0)
-        ToggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+        ToggleButton.Size = UDim2.new(0.12, 0, 0.12, 0)
+        ToggleButton.Position = UDim2.new(0.05, 0, 0.05, 0)
         Title.TextSize = 26
         TestButton.TextSize = 20
+        ToggleButton.TextSize = 22
     end
+    print("Optimized for Mobile") -- Debug
 end
 OptimizeForMobile()
 
@@ -168,6 +176,7 @@ MainFrame.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = MainFrame.Position
+        print("Dragging Started") -- Debug
     end
 end)
 
@@ -186,5 +195,6 @@ end)
 MainFrame.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = false
+        print("Dragging Ended") -- Debug
     end
 end)
